@@ -810,10 +810,26 @@ static HRESULT Update2(
 
   if (!mtMode)
   #endif
-    return Update2St(
+  {
+    int priority = GetThreadPriority(GetCurrentThread());
+
+    if (!::SetThreadPriority(GetCurrentThread(), options.numThreadPriority()))
+    {
+      return E_FAIL;
+    }
+
+    HRESULT result = Update2St(
         EXTERNAL_CODECS_LOC_VARS
         archive, inArchive,
         inputItems, updateItems, &options2, outSeqMode, comment, updateCallback, totalComplexity, opCallback);
+
+    if (!::SetThreadPriority(GetCurrentThread(), priority))
+    {
+      return E_FAIL;
+    }
+
+    return result;
+  }
 
 
   #ifndef _7ZIP_ST
@@ -861,6 +877,10 @@ static HRESULT Update2(
       threadInfo.FileTime = 0;
       threadInfo.ExpectedDataSize = (UInt64)(Int64)-1;
       RINOK(threadInfo.CreateThread());
+      if (!threadInfo.Thread.SetPriority(options.numThreadPriority()))
+      {
+        return E_FAIL;
+      }
     }
   }
 

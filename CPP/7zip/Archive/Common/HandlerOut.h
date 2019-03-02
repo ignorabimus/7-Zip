@@ -28,6 +28,8 @@ protected:
       _memAvail = memAvail;
       _memUsage = memAvail / 32 * 17;
     }
+
+    _threadPriority = 3; // THREAD_PRIORITY_NORMAL
   }
 
 public:
@@ -38,6 +40,22 @@ public:
 
   UInt64 _memUsage;
   UInt64 _memAvail;
+
+  UInt32 _threadPriority;
+  int numThreadPriority() const
+  {
+    switch (_threadPriority)
+    {
+      case 0: return THREAD_PRIORITY_IDLE;          // -15
+      case 1: return THREAD_PRIORITY_LOWEST;        // -2
+      case 2: return THREAD_PRIORITY_BELOW_NORMAL;  // -1
+      case 3: return THREAD_PRIORITY_NORMAL;        // 0
+      case 4: return THREAD_PRIORITY_ABOVE_NORMAL;  // 1
+      case 5: return THREAD_PRIORITY_HIGHEST;       // 2
+      case 6: return THREAD_PRIORITY_TIME_CRITICAL; // 15
+      default: return THREAD_PRIORITY_NORMAL;       // 0
+    }
+  }
 
   bool SetCommonProperty(const UString &name, const PROPVARIANT &value, HRESULT &hres);
 

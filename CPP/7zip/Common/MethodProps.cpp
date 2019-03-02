@@ -279,7 +279,8 @@ static const CNameToPropID g_NameToPropID[] =
   { VT_UI4, "b" },
   { VT_UI4, "check" },
   { VT_BSTR, "filter" },
-  { VT_UI8, "memuse" }
+  { VT_UI8, "memuse" },
+  { VT_UI4, "thpriority" }
 };
 
 static int FindPropIdExact(const UString &name)

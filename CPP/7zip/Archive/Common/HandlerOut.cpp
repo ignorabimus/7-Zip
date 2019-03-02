@@ -82,6 +82,12 @@ bool CCommonMethodProps::SetCommonProperty(const UString &name, const PROPVARIAN
     return true;
   }
 
+  if (name.IsPrefixedBy_Ascii_NoCase("thpriority"))
+  {
+    hres = ParsePropToUInt32(name.Ptr(10), value, _threadPriority);
+    return true;
+  }
+
   return false;
 }
 

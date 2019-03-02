@@ -115,6 +115,7 @@ static const char * const kHelpString =
     "  -i[r[-|0]]{@listfile|!wildcard} : Include filenames\n"
     "  -m{Parameters} : set compression Method\n"
     "    -mmt[N] : set number of CPU threads\n"
+    "    -mthpriority[N] : set thread priority: -mthpriority0 (idle) ... -mthpriority6 (critical)\n"
     "    -mx[N] : set compression level: -mx1 (fastest) ... -mx9 (ultra)\n"
     "  -o{Directory} : set Output directory\n"
     #ifndef _NO_CRYPTO
