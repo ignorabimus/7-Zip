@@ -29,6 +29,7 @@ protected:
       _memUsage = memAvail / 32 * 17;
     }
 
+    _processPriority = 2; // NORMAL_PRIORITY_CLASS
     _threadPriority = 3; // THREAD_PRIORITY_NORMAL
   }
 
@@ -40,6 +41,21 @@ public:
 
   UInt64 _memUsage;
   UInt64 _memAvail;
+
+  UInt32 _processPriority;
+  int numProcessPriority() const
+  {
+    switch (_processPriority)
+    {
+      case 0: return IDLE_PRIORITY_CLASS;         // 0x00000040
+      case 1: return BELOW_NORMAL_PRIORITY_CLASS; // 0x00004000
+      case 2: return NORMAL_PRIORITY_CLASS;       // 0x00000020
+      case 3: return ABOVE_NORMAL_PRIORITY_CLASS; // 0x00008000
+      case 4: return HIGH_PRIORITY_CLASS;         // 0x00000080
+      case 5: return REALTIME_PRIORITY_CLASS;     // 0x00000100
+      default: return NORMAL_PRIORITY_CLASS;      // 0x00000020
+    }
+  }
 
   UInt32 _threadPriority;
   int numThreadPriority() const

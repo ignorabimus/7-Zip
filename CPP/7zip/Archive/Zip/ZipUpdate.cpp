@@ -811,8 +811,13 @@ static HRESULT Update2(
   if (!mtMode)
   #endif
   {
-    int priority = GetThreadPriority(GetCurrentThread());
+    int prpriority = GetPriorityClass(GetCurrentProcess());
+    int thpriority = GetThreadPriority(GetCurrentThread());
 
+    if (!::SetPriorityClass(GetCurrentProcess(), options.numProcessPriority()))
+    {
+      return E_FAIL;
+    }
     if (!::SetThreadPriority(GetCurrentThread(), options.numThreadPriority()))
     {
       return E_FAIL;
@@ -823,7 +828,11 @@ static HRESULT Update2(
         archive, inArchive,
         inputItems, updateItems, &options2, outSeqMode, comment, updateCallback, totalComplexity, opCallback);
 
-    if (!::SetThreadPriority(GetCurrentThread(), priority))
+    if (!::SetPriorityClass(GetCurrentProcess(), prpriority))
+    {
+      return E_FAIL;
+    }
+    if (!::SetThreadPriority(GetCurrentThread(), thpriority))
     {
       return E_FAIL;
     }
@@ -833,6 +842,13 @@ static HRESULT Update2(
 
 
   #ifndef _7ZIP_ST
+
+  int prpriority = GetPriorityClass(GetCurrentProcess());
+
+  if (!::SetPriorityClass(GetCurrentProcess(), options.numProcessPriority()))
+  {
+    return E_FAIL;
+  }
 
   CObjectVector<CItemOut> items;
 
@@ -1146,6 +1162,11 @@ static HRESULT Update2(
   
   complexity += kCentralHeaderSize * updateItems.Size() + 1;
   mtProgressMixerSpec->Mixer2->SetProgressOffset(complexity);
+
+  if (!::SetPriorityClass(GetCurrentProcess(), prpriority))
+  {
+    return E_FAIL;
+  }
   return mtCompressProgressMixer.SetRatioInfo(0, NULL, NULL);
 
   #endif
